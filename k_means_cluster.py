@@ -31,7 +31,7 @@ print()
 
 '''k-means clustering: pearson similarity'''
 resulting_clusters = clusters.kcluster(attr_matrix,distance=clusters.pearson,k=num_cluster)
-print ('clusters by pearson similarity')
+print ('clusters by pearson correlation')
 for i in range(num_cluster):
     print ('cluster {}:'.format(i+1))
     print ([countries_list[r] for r in resulting_clusters[i]])
@@ -45,11 +45,3 @@ for i in range(num_cluster):
     print ('cluster {}:'.format(i+1))
     print ([countries_list[r] for r in resulting_clusters[i]])
 
-
-print()
-
-resulting_clusters = clusters.kcluster(attr_matrix,distance=clusters.cosine,k=num_cluster)
-print ('clusters by euclidean distance')
-for i in range(num_cluster):
-    print ('cluster {}:'.format(i+1))
-    print ([countries_list[r] for r in resulting_clusters[i]])

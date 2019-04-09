@@ -20,16 +20,16 @@ def str_to_float(data):
 
 '''Create a list of country names'''
 def get_country_names(data):
+    del data[0]
     countries = []
     for row in data:
-        countries.append([row[0],row[1]])
+        countries.append(row[1])
     return countries
 
 
 '''Remove non-numerical columns'''
 def create_attribute_matrix(data):
     attr_matrix = copy.deepcopy(data)
-    del attr_matrix[0]
     for row in attr_matrix:
         del row[0:2]
         del row[-1]

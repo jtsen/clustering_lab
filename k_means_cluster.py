@@ -10,10 +10,46 @@ countries_list = data_processing.get_country_names(data)
 attr_matrix = data_processing.create_attribute_matrix(data)
 data_processing.str_to_float(attr_matrix)
 
-'''Create Similarity Matrix'''
-num_cluster=5
-herro = clusters.kcluster(attr_matrix,distance=clusters.euclidean,k=num_cluster)
+'''k-means clustering: euclidean distance'''
+num_cluster=3
+resulting_clusters = clusters.kcluster(attr_matrix,distance=clusters.euclidean,k=num_cluster)
 print ('clusters by euclidean distance')
 for i in range(num_cluster):
     print ('cluster {}:'.format(i+1))
-    print ([countries_list[r] for r in herro[i]])
+    print ([countries_list[r] for r in resulting_clusters[i]])
+
+print()
+
+'''k-means clustering: tanimoto coefficient'''
+resulting_clusters = clusters.kcluster(attr_matrix,distance=clusters.tanimoto,k=num_cluster)
+print ('clusters by tanimoto coefficient')
+for i in range(num_cluster):
+    print ('cluster {}:'.format(i+1))
+    print ([countries_list[r] for r in resulting_clusters[i]])
+
+print()
+
+'''k-means clustering: pearson similarity'''
+resulting_clusters = clusters.kcluster(attr_matrix,distance=clusters.pearson,k=num_cluster)
+print ('clusters by pearson similarity')
+for i in range(num_cluster):
+    print ('cluster {}:'.format(i+1))
+    print ([countries_list[r] for r in resulting_clusters[i]])
+
+print()
+
+'''k-means clustering: cosine similarity'''
+resulting_clusters = clusters.kcluster(attr_matrix,distance=clusters.cosine,k=num_cluster)
+print ('clusters by cosine similarity')
+for i in range(num_cluster):
+    print ('cluster {}:'.format(i+1))
+    print ([countries_list[r] for r in resulting_clusters[i]])
+
+
+print()
+
+resulting_clusters = clusters.kcluster(attr_matrix,distance=clusters.cosine,k=num_cluster)
+print ('clusters by euclidean distance')
+for i in range(num_cluster):
+    print ('cluster {}:'.format(i+1))
+    print ([countries_list[r] for r in resulting_clusters[i]])

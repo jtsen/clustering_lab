@@ -1,6 +1,6 @@
 from PIL import Image,ImageDraw
 from math import *
-import random, copy
+import random, json
 
 def readfile(file_name):
     f = open(file_name)
@@ -373,7 +373,7 @@ def bisect_k_means(rows, distance=euclidean, k=4):
             cluster_to_split_index = -1
         cluster_to_split_index = SSE_list.index(max(SSE_list))
 
-        #create list with "points" in the cluster
+        #create list with "points" in the cluster that is being split
         cluster_to_split = [[i for i in rows[index]] for index in clusters[cluster_to_split_index]]
 
         #split cluster with k-means
@@ -390,3 +390,14 @@ def bisect_k_means(rows, distance=euclidean, k=4):
         SSE_list.append(0.0)
 
     return clusters
+
+
+def results_to_js(results):
+    results_json = json.dumps(results)
+
+    with open('public_html/data.js', 'w') as output:
+        output.write("var clusters =")
+        output.write(results_json)
+
+    return
+

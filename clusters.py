@@ -1,6 +1,6 @@
 from PIL import Image,ImageDraw
 from math import *
-import random
+import random, copy
 
 def readfile(file_name):
     f = open(file_name)
@@ -281,7 +281,7 @@ def kcluster(rows,distance=euclidean,k=4):
                     avgs[j]/=len(bestmatches[i])
                 clusters[i]=avgs
       
-    return bestmatches
+    return bestmatches, clusters
 
 
 def scaledown(data,distance=pearson,rate=0.01):
@@ -343,3 +343,50 @@ def draw2d(data,labels,jpeg='mds2d.jpg'):
         draw.text((x,y),labels[i],(0,0,0))
     img.save(jpeg,'JPEG')
 
+def bisect_k_means(rows, distance=euclidean, k=4):
+    cluster_to_split_index = 0
+    SSE_list = [0.0]
+    clusters = [[]]
+
+    #treat all "points" as one big cluster
+    cluster_index, curr_centroid = kcluster(rows, distance=distance, k=1)
+    cluster_vectors = [rows[i] for i in cluster_index[0]]
+
+    for iter in range(100):
+        #if k cluster is made, break and return clusters
+        if len(clusters) == k:
+            break
+
+        #split the only cluster in the first iteration
+        if iter == 0:
+            cluster_index,curr_centroid = kcluster(cluster_vectors, distance=distance, k=2)
+            cluster_vectors  = [[rows[i] for i in cluster_index[0]], [rows[j] for j in cluster_index[1]]]
+            SSE_list.append(0.0)
+            clusters[0] = cluster_index[0]
+            clusters.append(cluster_index[1])
+            continue
+
+        #calculate SSE for each cluster to decide which to split on
+        for cl in range(2):
+            for member in cluster_vectors[cl]:
+                SSE_list[cluster_to_split_index] += (distance(member,curr_centroid[cl]))**2
+            cluster_to_split_index = -1
+        cluster_to_split_index = SSE_list.index(max(SSE_list))
+
+        #create list with "points" in the cluster
+        cluster_to_split = [[i for i in rows[index]] for index in clusters[cluster_to_split_index]]
+
+        #split cluster with k-means
+        cluster_index, curr_centroid = kcluster(cluster_to_split, distance=distance, k=2)
+        cluster_vectors = [[cluster_to_split[i] for i in cluster_index[0]], [cluster_to_split[j] for j in cluster_index[1]]]
+
+        #update clusters list and SSE list
+        clusters.append([])
+        for index in cluster_index[1]:
+            clusters[-1].append(clusters[cluster_to_split_index][index])
+        clusters[cluster_to_split_index] = [x for x in clusters[cluster_to_split_index] if x not in clusters[-1]]
+
+        SSE_list[cluster_to_split_index] = 0.0
+        SSE_list.append(0.0)
+
+    return clusters

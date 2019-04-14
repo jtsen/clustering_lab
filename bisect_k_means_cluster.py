@@ -17,9 +17,24 @@ for i in range(5):
     print ('cluster {}:'.format(i+1))
     print ([countries_list[r] for r in herro[i]])
     print([r for r in herro[i]])
-    for j in herro[i]:
-        results.append([countries_list[j],i+1])
 
-clusters.results_to_js(results)
 
+
+herro = clusters.bisect_k_means(attr_matrix,distance=clusters.pearson, k=5)
+for i in range(5):
+    print ('cluster {}:'.format(i+1))
+    print ([countries_list[r] for r in herro[i]])
+    print([r for r in herro[i]])
+
+herro = clusters.bisect_k_means(attr_matrix, distance=clusters.tanimoto, k=5)
+for i in range(5):
+    print ('cluster {}:'.format(i+1))
+    print ([countries_list[r] for r in herro[i]])
+    print([r for r in herro[i]])
+
+herro = clusters.bisect_k_means(attr_matrix, distance=clusters.cosine, k=5)
+for i in range(5):
+    print ('cluster {}:'.format(i+1))
+    print ([countries_list[r] for r in herro[i]])
+    print([r for r in herro[i]])
 
